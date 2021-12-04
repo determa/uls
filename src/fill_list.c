@@ -74,13 +74,13 @@ files *fill_list(arguments *uls, char *directory, files *lil, bool delete) {
             mx_printerr("uls: ");
             mx_printerr(directory);
             mx_printerr(": No such file or directory\n");
-            return NULL;
+            return list;
         }
         if (errno == EACCES) { // проверка доступ
             mx_printerr("uls: ");
             mx_printerr(directory);
             mx_printerr(": Permission denied\n");
-            return NULL;
+            return list;
         }
     }
     if (dh == NULL) {
