@@ -28,11 +28,16 @@ char* permissions(mode_t perm){ // доступ в формате "rwxr-r -"
 }
 
 void print_list(arguments *uls, files *list, bool is_file) {
-
-    if (uls->flags[4] == true) { // -A
+    if (!list) {
+        return;
+    }
+    if (uls->flags[4] == true && !is_file) { // -A
         list = list->next;
         list = list->next;
         uls->flags[3] = true;
+    }
+    while (uls->flags[3] == false && list && list->entry->d_name[0] == '.' && !is_file) {
+        list = list->next;
     }
     if (!list) {
         return;
@@ -62,10 +67,10 @@ void print_list(arguments *uls, files *list, bool is_file) {
     struct passwd *pwd;
 
     while (list) {
-        if (uls->flags[3] == false && list->entry->d_name[0] == '.') { //-a
-            list = list->next;
-            continue;
-        }
+        // if (uls->flags[3] == false && list->entry->d_name[0] == '.') { //-a
+        //     list = list->next;
+        //     continue;
+        // }
         count_dname++;
         total += list->statbuf.st_blocks;
         max_len = max_len > mx_strlen(list->entry->d_name) ? max_len : mx_strlen(list->entry->d_name);
@@ -111,11 +116,11 @@ void print_list(arguments *uls, files *list, bool is_file) {
         else {
             time_lol = mx_strndup(time_temp, mx_strlen(time_temp) - 9);
         }
-        if (uls->flags[3] == false && list->entry->d_name[0] == '.') {
-            list = list->next;
-            tmp_head = tmp_head->next;
-            continue;
-        } // если у нас не -а, то не печатаем скрытые файлы
+        // if (uls->flags[3] == false && list->entry->d_name[0] == '.') {
+        //     list = list->next;
+        //     tmp_head = tmp_head->next;
+        //     continue;
+        // } // если у нас не -а, то не печатаем скрытые файлы
         t++;
 
         // вывод размера и название файлов/папок
